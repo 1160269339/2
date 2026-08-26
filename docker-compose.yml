@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: hosting-nginx
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    volumes:
+      - ./public:/var/www/public:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+    networks:
+      - hosting
+    restart: unless-stopped
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hosting-php
+    volumes:
+      - .:/var/www:cached
+    environment:
+      - DB_HOST=mysql
+      - DB_NAME=${DB_NAME:-hosting}
+      - DB_USER=${DB_USER:-hosting}
+      - DB_PASSWORD=${DB_PASSWORD:-hosting123}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+    depends_on:
+      - mysql
+    networks:
+      - hosting
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: hosting-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root123}
+      - MYSQL_DATABASE=${DB_NAME:-hosting}
+      - MYSQL_USER=${DB_USER:-hosting}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-hosting123}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - hosting
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: hosting-phpmyadmin
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root123}
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - hosting
+    restart: unless-stopped
+
+networks:
+  hosting:
+    driver: bridge
