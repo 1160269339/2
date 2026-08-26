@@ -309,7 +309,7 @@ class PayMonitor
         foreach ($highErrorRates as $rate) {
             $failRate = round($rate['fail_count'] * 100.0 / $rate['total_count'], 2);
             if ($failRate > 20) {
-                Db::name('pay_alert')->insert([
+                Db::name('dd_pay_alert')->insert([
                     'pay_type' => $rate['pay_type'],
                     'alert_type' => 'high_error_rate',
                     'alert_level' => 'error',
@@ -332,7 +332,7 @@ class PayMonitor
         foreach ($highSignFailRates as $rate) {
             $signFailRate = round($rate['sign_fail_count'] * 100.0 / $rate['total_count'], 2);
             if ($signFailRate > 10) {
-                Db::name('pay_alert')->insert([
+                Db::name('dd_pay_alert')->insert([
                     'pay_type' => $rate['pay_type'],
                     'alert_type' => 'high_sign_fail',
                     'alert_level' => 'warning',
