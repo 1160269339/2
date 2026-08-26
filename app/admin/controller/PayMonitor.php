@@ -19,7 +19,7 @@ class PayMonitor
         $limit = input('limit', 50);
 
         // 获取统计信息
-        $stats = Db::name('pay_monitor')
+        $stats = Db::name('dd_pay_monitor')
             ->where('day', $day)
             ->group('pay_type')
             ->field('pay_type, SUM(total_count) as total_count, SUM(success_count) as success_count, SUM(fail_count) as fail_count')
@@ -36,7 +36,7 @@ class PayMonitor
         }
 
         // 总统计
-        $totalStats = Db::name('pay_monitor')
+        $totalStats = Db::name('dd_pay_monitor')
             ->where('day', $day)
             ->field('SUM(total_count) as total_count, SUM(success_count) as success_count, SUM(fail_count) as fail_count, SUM(sign_fail_count) as sign_fail_count')
             ->find();
@@ -45,7 +45,7 @@ class PayMonitor
         $highErrorRateAlerts = '';
         $highSignFailRateAlerts = '';
 
-        $highErrorRates = Db::name('pay_monitor')
+        $highErrorRates = Db::name('dd_pay_monitor')
             ->where('day', $day)
             ->where('fail_count', '>', 0)
             ->field('pay_type, fail_count, total_count')
@@ -61,7 +61,7 @@ class PayMonitor
             }
         }
 
-        $highSignFailRates = Db::name('pay_monitor')
+        $highSignFailRates = Db::name('dd_pay_monitor')
             ->where('day', $day)
             ->where('sign_fail_count', '>', 0)
             ->field('pay_type, sign_fail_count, total_count')
@@ -78,7 +78,7 @@ class PayMonitor
         }
 
         // 支付日志
-        $logs = Db::name('pay_log')
+        $logs = Db::name('dd_pay_log')
             ->where('notify_time', '>=', strtotime($day))
             ->where('notify_time', '<=', strtotime($day . ' 23:59:59'))
             ->order('id desc')
@@ -86,13 +86,13 @@ class PayMonitor
             ->select()
             ->toArray();
 
-        $totalLogs = Db::name('pay_log')
+        $totalLogs = Db::name('dd_pay_log')
             ->where('notify_time', '>=', strtotime($day))
             ->where('notify_time', '<=', strtotime($day . ' 23:59:59'))
             ->count();
 
         // 错误记录
-        $errors = Db::name('pay_error')
+        $errors = Db::name('dd_pay_error')
             ->where('create_time', '>=', strtotime($day))
             ->where('create_time', '<=', strtotime($day . ' 23:59:59'))
             ->order('id desc')
@@ -100,7 +100,7 @@ class PayMonitor
             ->select()
             ->toArray();
 
-        $totalErrors = Db::name('pay_error')
+        $totalErrors = Db::name('dd_pay_error')
             ->where('create_time', '>=', strtotime($day))
             ->where('create_time', '<=', strtotime($day . ' 23:59:59'))
             ->count();
@@ -199,7 +199,7 @@ class PayMonitor
         $limit = input('limit', 50);
         $payType = input('pay_type', '');
 
-        $query = Db::name('pay_log');
+        $query = Db::name('dd_pay_log');
 
         if ($payType) {
             $query->where('pay_type', $payType);
@@ -233,7 +233,7 @@ class PayMonitor
         $days = input('days', 7);
         $startTime = time() - ($days * 24 * 60 * 60);
 
-        $stats = Db::name('pay_monitor')
+        $stats = Db::name('dd_pay_monitor')
             ->where('day', '>=', date('Y-m-d', $startTime))
             ->group('pay_type')
             ->field('pay_type, SUM(total_count) as total_count, SUM(success_count) as success_count, SUM(fail_count) as fail_count')
@@ -265,7 +265,7 @@ class PayMonitor
         $limit = input('limit', 50);
         $payType = input('pay_type', '');
 
-        $query = Db::name('pay_error');
+        $query = Db::name('dd_pay_error');
 
         if ($payType) {
             $query->where('pay_type', $payType);
@@ -299,7 +299,7 @@ class PayMonitor
         $alerts = [];
 
         // 检查高错误率
-        $highErrorRates = Db::name('pay_monitor')
+        $highErrorRates = Db::name('dd_pay_monitor')
             ->where('day', date('Y-m-d'))
             ->where('fail_count', '>', 0)
             ->field('pay_type, fail_count, total_count')
@@ -322,7 +322,7 @@ class PayMonitor
         }
 
         // 检查高签名失败率
-        $highSignFailRates = Db::name('pay_monitor')
+        $highSignFailRates = Db::name('dd_pay_monitor')
             ->where('day', date('Y-m-d'))
             ->where('sign_fail_count', '>', 0)
             ->field('pay_type, sign_fail_count, total_count')
@@ -358,7 +358,7 @@ class PayMonitor
     {
         $isRead = input('is_read', null);
 
-        $query = Db::name('pay_alert');
+        $query = Db::name('dd_pay_alert');
 
         if ($isRead !== null) {
             $query->where('is_read', $isRead);
@@ -381,7 +381,7 @@ class PayMonitor
      */
     public function markAlertRead($id)
     {
-        $result = Db::name('pay_alert')->where('id', $id)->update([
+        $result = Db::name('dd_pay_alert')->where('id', $id)->update([
             'is_read' => 1,
         ]);
 
@@ -403,7 +403,7 @@ class PayMonitor
      */
     public function markAllAlertsRead()
     {
-        $result = Db::name('pay_alert')->where('is_read', 0)->update([
+        $result = Db::name('dd_pay_alert')->where('is_read', 0)->update([
             'is_read' => 1,
         ]);
 
