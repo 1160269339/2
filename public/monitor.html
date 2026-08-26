@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付回调监控</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>💰 支付回调监控</h2>
+        
+        <!-- 统计卡片 -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">总回调数</h5>
+                        <h2>{$total_count}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">成功数</h5>
+                        <h2>{$success_count}</h2>
+                        <small>{$success_rate}%</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">失败数</h5>
+                        <h2>{$fail_count}</h2>
+                        <small>{$fail_rate}%</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">签名失败数</h5>
+                        <h2>{$sign_fail_count}</h2>
+                        <small>{$sign_fail_rate}%</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 告警区域 -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>⚠️ 异常告警</h3>
+                <div class="alert alert-danger">
+                    <strong>高错误率告警:</strong> {$high_error_rate_alerts}
+                </div>
+                <div class="alert alert-warning">
+                    <strong>高签名失败率告警:</strong> {$high_sign_fail_rate_alerts}
+                </div>
+            </div>
+        </div>
+        
+        <!-- 支付类型统计 -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>📊 支付类型统计</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>支付方式</th>
+                            <th>总回调数</th>
+                            <th>成功数</th>
+                            <th>失败数</th>
+                            <th>成功率</th>
+                            <th>失败率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {$stats_rows}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 支付日志 -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>📝 支付日志</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>支付类型</th>
+                            <th>订单号</th>
+                            <th>金额</th>
+                            <th>状态</th>
+                            <th>签名验证</th>
+                            <th>回调时间</th>
+                            <th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {$log_rows}
+                    </tbody>
+                </table>
+                <nav>
+                    <ul class="pagination">
+                        {$pagination}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- 错误记录 -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>❌ 错误记录</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>支付类型</th>
+                            <th>订单号</th>
+                            <th>错误类型</th>
+                            <th>错误信息</th>
+                            <th>IP</th>
+                            <th>时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {$error_rows}
+                    </tbody>
+                </table>
+                <nav>
+                    <ul class="pagination">
+                        {$error_pagination}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
