@@ -100,7 +100,7 @@ mysql -u root -p root < database/payment_monitor.sql
 在所有支付回调文件中添加监控记录：
 
 ```php
-use app\admin\controller\PayMonitor;
+use app\\admin\\controller\\PayMonitor;
 
 $monitor = new PayMonitor();
 
