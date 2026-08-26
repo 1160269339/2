@@ -8,7 +8,13 @@
 </head>
 <body>
     <div class="container mt-4">
-        <h2>💰 支付回调监控</h2>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>💰 支付回调监控</h2>
+            <div>
+                <a href="/admin/pay_monitor/index?day={$day}" class="btn btn-primary">刷新</a>
+                <a href="/admin/pay_monitor/check_alerts" class="btn btn-warning">检查告警</a>
+            </div>
+        </div>
         
         <!-- 统计卡片 -->
         <div class="row mt-4">
@@ -54,10 +60,16 @@
             <div class="col-md-12">
                 <h3>⚠️ 异常告警</h3>
                 <div class="alert alert-danger">
-                    <strong>高错误率告警:</strong> {$high_error_rate_alerts}
+                    <strong>高错误率告警:</strong>
+                    <ul>
+                        {$high_error_rate_alerts}
+                    </ul>
                 </div>
                 <div class="alert alert-warning">
-                    <strong>高签名失败率告警:</strong> {$high_sign_fail_rate_alerts}
+                    <strong>高签名失败率告警:</strong>
+                    <ul>
+                        {$high_sign_fail_rate_alerts}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -65,7 +77,7 @@
         <!-- 支付类型统计 -->
         <div class="row mt-4">
             <div class="col-md-12">
-                <h3>📊 支付类型统计</h3>
+                <h3>📊 支付类型统计 ({$day})</h3>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
