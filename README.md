@@ -1,133 +1,91 @@
 # 主机系统 - 一键部署
 
-一个基于 ThinkPHP 5.x 的主机销售系统，支持多种支付方式和主机插件。
+> 一个基于 ThinkPHP 5.x 的主机销售系统，支持多种支付方式和主机插件。
 
-## 🚀 一键部署
+---
 
-### 方法1：使用部署脚本（推荐）
+## 🚀 快速开始
+
+### 一键部署（推荐）
 
 ```bash
-# 下载并运行部署脚本
 curl -fsSL https://raw.githubusercontent.com/1160269339/2/main/deploy.sh | bash
 ```
 
-### 方法2：手动部署
+### Docker部署
 
 ```bash
-# 1. 克隆项目
-git clone https://github.com/1160269339/2.git /opt/hosting
-cd /opt/hosting
+git clone https://github.com/1160269339/2.git
+cd 2
+cp .env.example .env
+docker-compose up -d
+```
 
-# 2. 安装依赖
-# Ubuntu/Debian
-apt-get update && apt-get install -y nginx php8.1-fpm php8.1-mysql php8.1-curl php8.1-gd php8.1-mbstring php8.1-xml php8.1-zip php8.1-intl php8.1-openssl php8.1-fileinfo php8.1-bcmath mysql-server git
+---
 
-# CentOS/RHEL
-yum install -y nginx php-fpm php-mysqlnd php-curl php-gd php-mbstring php-xml php-zip php-intl php-openssl php-fileinfo php-bcmath mariadb-server git
+## 📚 文档导航
 
-# 3. 配置数据库
+| 文档 | 说明 |
+|------|------|
+| [QUICKSTART.md](QUICKSTART.md) | 🚀 快速入门 - 三种部署方式 |
+| [TUTORIAL.md](TUTORIAL.md) | 📖 添加主机教程 - EasyPanel/MNBT完整配置 |
+| [CHECKLIST.md](CHECKLIST.md) | ✅ 配置检查清单 - 使用前必查 |
+| [README_DOCKER.md](README_DOCKER.md) | 🐳 Docker部署详解 |
+| [PAYMENT_MONITOR_README.md](PAYMENT_MONITOR_README.md) | 💳 支付监控配置 |
+
+---
+
+## 🔌 添加主机
+
+### EasyPanel 对接
+
+1. 进入后台 → 主机管理 → 主机插件 → EasyPanel
+2. 填写主机地址（不带http/https）和安全码
+3. 测试连接 → 保存
+4. 创建主机套餐 → 测试购买
+
+### MNBT 对接
+
+1. 进入后台 → 主机管理 → 主机插件 → MNBT
+2. 填写主机地址、安全码、账号、密码
+3. 测试连接 → 同步宝塔列表
+4. 创建主机套餐 → 测试购买
+
+**详细教程**：[TUTORIAL.md](TUTORIAL.md)
+
+---
+
+## 💳 支付方式
+
+- ✅ 支付宝（官方/电脑网站/APP）
+- ✅ 微信支付
+- ✅ 码支付（MAIZHI）
+- ✅ 易支付
+- ✅ 其他支付平台
+
+---
+
+## 🗄️ 数据库
+
+```bash
+# 创建数据库
 mysql -u root -p -e "CREATE DATABASE hosting CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# 导入数据
 mysql -u root -p hosting < sjk.sql
-
-# 4. 更新配置
-vim app/database.php
-# 修改数据库连接信息
-
-# 5. 配置Nginx
-cat > /etc/nginx/sites-available/hosting << 'EOF'
-server {
-    listen 80;
-    server_name _;
-    root /opt/hosting/public;
-    index index.php index.html;
-    
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
-    
-    location ~ \.php$ {
-        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
-}
-EOF
-
-ln -sf /etc/nginx/sites-available/hosting /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-nginx -t && systemctl restart nginx
-
-# 6. 设置权限
-chown -R www-data:www-data /opt/hosting
-chmod -R 755 /opt/hosting
-chmod -R 777 /opt/hosting/runtime
 ```
 
-## 📋 系统要求
+---
 
-- PHP 8.0+
-- MySQL 5.7+ / MariaDB 10.3+
-- Nginx
-- Git
+## 🔐 默认登录
 
-## 🔧 功能特性
+- 后台地址：`http://your-domain.com/admin`
+- 账号：`admin`
+- 密码：`123456`
 
-- ✅ 用户系统（注册、登录、找回）
-- ✅ 产品管理（虚拟主机、域名等）
-- ✅ 订单系统
-- ✅ 支付对接（支付宝、微信、易支付）
-- ✅ 主机插件（Default、EasyPanel、MNBT、魔方）
-- ✅ 邮件系统
-- ✅ 短信接口
-- ✅ 实名认证
-- ✅ 后台管理
+---
 
-## 📁 项目结构
+## 📞 技术支持
 
-```
-hosting/
-├── app/                # 应用目录
-│   ├── admin/         # 后台管理
-│   └── index/         # 前台用户
-├── extend/             # 扩展库
-│   ├── PHPMailer/     # 邮件发送
-│   ├── pay/           # 支付对接
-│   ├── realname/      # 实名认证
-│   └── sms/           # 短信接口
-├── frame/              # ThinkPHP框架
-├── plugins/            # 插件系统
-│   ├── host/          # 主机插件
-│   └── pay/           # 支付插件
-├── public/             # 公共文件
-├── runtime/            # 运行时目录
-├── vendor/             # Composer依赖
-└── sjk.sql             # 数据库文件
-```
-
-## 🔗 相关链接
-
-- GitHub: https://github.com/1160269339/2
-- 安装教程: 安装教程.txt
-- EasyPanel对接: easypanel对接教程.txt
-- MNBT对接: mnbt对接教程.txt
-
-## 📝 默认登录
-
-- 后台地址: `/admin`
-- 默认账号: `admin`
-- 默认密码: `admin123`
-
-## ⚠️ 注意事项
-
-1. 请确保服务器防火墙开放80端口
-2. 部署后请及时修改默认密码
-3. 建议配置HTTPS（Let's Encrypt免费证书）
-4. 定期备份数据库
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-## 📄 许可证
-
-MIT License
+- 原作者QQ：2150811531
+- QQ群：905412821
