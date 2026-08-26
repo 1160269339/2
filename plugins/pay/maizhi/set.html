@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>码支付配置</title>
+</head>
+<body>
+    <div class="container">
+        <h2>码支付配置</h2>
+        <form method="post" action="">
+            <div class="form-group">
+                <label>API地址</label>
+                <input type="text" name="apiurl" value="{$apiurl}" placeholder="https://api.maizhifu.com/" />
+                <span class="help">码支付官方API地址</span>
+            </div>
+            
+            <div class="form-group">
+                <label>商户ID (PID)</label>
+                <input type="text" name="pid" value="{$pid}" placeholder="请输入您的商户ID" />
+                <span class="help">在码支付后台获取</span>
+            </div>
+            
+            <div class="form-group">
+                <label>通信密钥 (Key)</label>
+                <input type="text" name="key" value="{$key}" placeholder="请输入您的通信密钥" />
+                <span class="help">在码支付后台获取，用于签名验证</span>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">保存配置</button>
+            </div>
+        </form>
+        
+        <hr/>
+        
+        <h3>对接说明</h3>
+        <ul>
+            <li>1. 在码支付官网注册商户账号</li>
+            <li>2. 获取商户ID (PID) 和通信密钥 (Key)</li>
+            <li>3. 将上述配置填写到本页面</li>
+            <li>4. 测试支付功能是否正常</li>
+        </ul>
+        
+        <h3>回调地址</h3>
+        <p>异步回调: <code>{$domain}/plugins/pay/maizhi/notify.php</code></p>
+        <p>同步回调: <code>{$domain}/plugins/pay/maizhi/return.php</code></p>
+    </div>
+</body>
+</html>
