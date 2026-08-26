@@ -1,4 +1,3 @@
-
 -- 支付回调日志表
 CREATE TABLE IF NOT EXISTS `dd_pay_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
