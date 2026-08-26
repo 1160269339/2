@@ -1,34 +1,43 @@
 <?php
 /**
  * 码支付 - 同步回调
- * 用于用户支付完成后跳转
  */
 
 use think\Db;
+use pay\maizhi;
 
-// 加载码支付SDK
-require_once __DIR__ . '/../../../extend/pay/maizhi.php';
+// 获取支付配置
+$file = file_exists(PATH . "/plugins/pay/" . $data1["plugins"] . "/set.php");
+if ($file && $data1["data"]) {
+    $ppay = json_decode($data1["data"], true);
+} else {
+    redirect(url('index/user/payrecord'));
+}
 
-// 获取配置
-$config = get_config('maizhi');
+$config = [
+    'pid'    => $ppay["0"]["value"],
+    'key'    => $ppay["1"]["value"],
+    'apiurl' => $ppay["2"]["value"] ?? 'https://api.maizhifu.com/',
+];
+
 if (empty($config['pid']) || empty($config['key'])) {
     redirect(url('index/user/payrecord'));
 }
 
 // 创建支付SDK实例
-$maizhi = new \pay\maizhi($config);
+$maizhi = new maizhi($config);
 
 // 验证签名
-$signed = $maizhi->verifyReturn();
+if (!$maizhi->verifyReturn()) {
+    redirect(url('index/user/payrecord'));
+}
 
 // 获取订单信息
 $out_trade_no = input('order');
-$order = Db::name('order')->where('oid', $out_trade_no)->where('uid', session('uid'))->find();
+$db = Db::name('pay')->where(['ordernumber' => $out_trade_no, 'state' => '1'])->find();
 
-if ($signed && $order && $order['status'] == 1) {
-    // 支付成功
+if ($db) {
     success('支付成功', url('index/user/payrecord'));
 } else {
-    // 支付失败或订单不存在
     redirect(url('index/user/payrecord'));
 }
