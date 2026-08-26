@@ -1,0 +1,99 @@
+{include file="default/user/header" title="提交工单" /}
+                      <main id="main-container">
+                <div class="content">
+                    <div class="block">
+                        <div class="block-header">
+                            <h3 class="block-title">提交工单</h3>
+                        </div>
+                        <div class="block-content block-content-full">
+                            <form>
+                                <div class="row items-push">
+                                    <div class="col-lg-12">
+                                        <div class="form-group row">
+                                            <label class="col-12">标题</label>
+                                            <div class="col-12">
+                                                <input name="title" class="form-control text-primary font-size-sm">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-12">内容</label>
+                                            <div class="col-12">
+                                             	<textarea class="form-control" name="content" rows="10" placeholder="请输入问题"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-12">验证码</label>
+                                            <div class="col-12">
+                                                    <div class="form-group row">
+
+                                                    <div class="col-6">
+                                                        <input type="text" class="form-control form-control-alt form-control-lg font-size-sm" name="captcha" placeholder="验证码">
+</div>
+
+                                                    <div class="col-6">
+ <img width="100%" height="50px" id="randimg" src="{:captcha_src()}" onclick="this.src='{:captcha_src()}?'+Math.random();"/>
+</div>
+                                                    </div>
+                                            </div>
+                                        </div>
+ 
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary btn-block">提交</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            {include file="default/user/footer" /}
+
+<script>
+    $("form").submit(function (){
+        var load = layer.msg('提交中，请稍后...',{icon:16,time:false});
+
+        var title = $("input[name='title']").val();
+        var content = $("textarea[name='content']").val();
+        var captcha = $("input[name='captcha']").val();
+
+
+        if( title.length < 1 || content.length < 1 ){
+            layer.alert('提交的信息不可为空',{icon:2});
+            return false;
+        }
+        if( captcha.length < 1 ){
+            layer.alert('请输入验证码',{icon:2});
+            return false;
+        }
+
+        $.ajax({
+            type:'POST',
+            url:'',
+            data:{
+                title:title,
+                content:content,
+                captcha:captcha,
+            },
+            dataType:'json',
+            success:function (data){
+                layer.close(load);
+                if(data.code == "1"){
+setTimeout(function (){
+               location.href = '/user/supportticket/'+data.id
+},1000);
+                    layer.alert(data.msg,{icon:1});
+                }else{
+                    layer.alert(data.msg,{icon:2});
+                    $("input[name='captcha']").val('');
+                    $("img[alt='captcha']").click();
+                }
+            }
+        });
+        return false;
+    });
+</script>
