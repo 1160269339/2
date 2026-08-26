@@ -5,14 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>支付回调监控</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .alert-badge {
+            font-size: 0.8em;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        .badge-success { background-color: #28a745; }
+        .badge-danger { background-color: #dc3545; }
+        .badge-warning { background-color: #ffc107; color: #000; }
+    </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>💰 支付回调监控</h2>
-            <div>
-                <a href="/admin/pay_monitor/index?day={$day}" class="btn btn-primary">刷新</a>
-                <a href="/admin/pay_monitor/check_alerts" class="btn btn-warning">检查告警</a>
+    <div class="container-fluid mt-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2>💰 支付回调监控</h2>
+                <p class="text-muted">监控时间: {$day}</p>
             </div>
         </div>
         
@@ -20,7 +29,7 @@
         <div class="row mt-4">
             <div class="col-md-3">
                 <div class="card bg-primary text-white">
-                    <div class="card-body">
+                    <div class="card-body text-center">
                         <h5 class="card-title">总回调数</h5>
                         <h2>{$total_count}</h2>
                     </div>
@@ -28,7 +37,7 @@
             </div>
             <div class="col-md-3">
                 <div class="card bg-success text-white">
-                    <div class="card-body">
+                    <div class="card-body text-center">
                         <h5 class="card-title">成功数</h5>
                         <h2>{$success_count}</h2>
                         <small>{$success_rate}%</small>
@@ -37,7 +46,7 @@
             </div>
             <div class="col-md-3">
                 <div class="card bg-danger text-white">
-                    <div class="card-body">
+                    <div class="card-body text-center">
                         <h5 class="card-title">失败数</h5>
                         <h2>{$fail_count}</h2>
                         <small>{$fail_rate}%</small>
@@ -46,7 +55,7 @@
             </div>
             <div class="col-md-3">
                 <div class="card bg-warning text-white">
-                    <div class="card-body">
+                    <div class="card-body text-center">
                         <h5 class="card-title">签名失败数</h5>
                         <h2>{$sign_fail_count}</h2>
                         <small>{$sign_fail_rate}%</small>
